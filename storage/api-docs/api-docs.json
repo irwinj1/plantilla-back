@@ -1,0 +1,74 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My API",
+        "description": "API documentation for My Application",
+        "contact": {
+            "email": "support@example.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/users/permissions": {
+            "post": {
+                "tags": [
+                    "Permisos"
+                ],
+                "summary": "Crea nuevos permisos",
+                "operationId": "7e4c3b1c3ed79a111f59823a78274484",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre",
+                                    "activo"
+                                ],
+                                "properties": {
+                                    "permissions": {
+                                        "type": "Array",
+                                        "example": [
+                                            "permiso1",
+                                            "permiso2"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Permisos creados con éxito"
+                    },
+                    "400": {
+                        "description": "Datos inválidos o petición incorrecta"
+                    },
+                    "401": {
+                        "description": "No autorizado, se requiere token"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Permisos",
+            "description": "Permisos"
+        }
+    ]
+}
