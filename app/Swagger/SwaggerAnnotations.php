@@ -4,11 +4,11 @@ namespace App\Swagger;
 
 /**
  * @OA\Info(
- *     title="My API",
+ *     title="Swagger Application",
  *     version="1.0.0",
  *     description="API documentation for My Application",
  *     @OA\Contact(
- *         email="support@example.com"
+ *         email="administrator@innovacion.gob.sv"
  *     ),
  *     @OA\License(
  *         name="Apache 2.0",

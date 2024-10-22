@@ -1,10 +1,10 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "My API",
+        "title": "Swagger Application",
         "description": "API documentation for My Application",
         "contact": {
-            "email": "support@example.com"
+            "email": "administrator@innovacion.gob.sv"
         },
         "license": {
             "name": "Apache 2.0",
