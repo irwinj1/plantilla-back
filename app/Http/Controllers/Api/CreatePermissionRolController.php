@@ -7,15 +7,12 @@ use App\Http\Response\ApiResponse;
 use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Validator;
 
-
-
-class CreatePrimissionRolController extends Controller
+class CreatePermissionRolController extends Controller
 {
-    //
     public function store(Request $request){
         DB::beginTransaction();  // start transaction for database operations
         try {
@@ -52,6 +49,16 @@ class CreatePrimissionRolController extends Controller
         } catch (\Exception $e) {
             //throw $th;
             return ApiResponse::error('Error al crear el rol '.$e->getMessage(), 500);
+        }
+    }
+    public function getRole(){
+        try {
+            // Obtiene todos los roles
+            $roles = Role::get();
+            return ApiResponse::success('Roles obtenidos',200,$roles);
+        } catch (\Exception $e) {
+            //throw $th;
+            return ApiResponse::error('Error al obtener los roles '.$e->getMessage(), 500);
         }
     }
     public function createPermissionsAction(Request $request)

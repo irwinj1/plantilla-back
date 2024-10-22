@@ -3,11 +3,11 @@
 namespace App\Swagger\Annotations;
 use OpenApi\Attributes as OA;
 
-class PermissionsRolesSwagger {
+class RolesSwager {
     #[OA\Post(
-        path: '/api/users/permissions',
-        tags: ['Permisos'],
-        summary: "Crea nuevos permisos",
+        path: '/api/users/role',
+        tags: ['Roles'],
+        summary: "Crea nuevos roles",
         security: [
             [
                 'bearerAuth' => []
@@ -16,8 +16,13 @@ class PermissionsRolesSwagger {
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['permissions'],
+                required: ['role', 'permissions'],
                 properties: [
+                    new OA\Property(
+                        type: 'String',
+                        property: 'role',
+                        example: "Role name"
+                    ),
                     new OA\Property(
                         type: 'Array',
                         property: 'permissions',
@@ -46,5 +51,5 @@ class PermissionsRolesSwagger {
             )
         ]
     )]
-    public function createPermission() {}
+    public function createRole() {}
 }
