@@ -1,13 +1,14 @@
 <?php
 
+use App\Http\Controllers\Api\CreatePermissionRolController;
 use App\Http\Controllers\Api\CreatePrimissionRolController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 
 Route::prefix('auth')->group(function (){
     Route::post('login', [AuthController::class,'login']);
@@ -16,8 +17,9 @@ Route::prefix('auth')->group(function (){
 });
 
 Route::middleware('auth:api')->prefix('users')->group(function (){
-    Route::post('/permissions',[CreatePrimissionRolController::class,'createPermissionsAction'])->middleware('rol:Super Admin');
-    Route::post('role',[CreatePrimissionRolController::class,'store'])->middleware('rol:Super Admin');
+    Route::get('/role',[CreatePermissionRolController::class, 'getRole'])->middleware('rol:Super Admin');
+    Route::post('/permissions',[CreatePermissionRolController::class,'createPermissionsAction'])->middleware('rol:Super Admin');
+    Route::post('/role',[CreatePermissionRolController::class,'store'])->middleware('rol:Super Admin');
 });
 
 
