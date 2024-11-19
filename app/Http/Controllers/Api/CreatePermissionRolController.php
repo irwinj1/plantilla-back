@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Str;
 
 class CreatePermissionRolController extends Controller
 {
@@ -101,40 +102,41 @@ class CreatePermissionRolController extends Controller
         try {
             // Validate request data
             $message = [
-                'name.required' => 'El nombre es obligatorio.',
-                'name.string' => 'El nombre debe ser una cadena.',
-                'name.max' => 'El nombre debe tener un máximo de 255 caracteres.',
+                // 'name.required' => 'El nombre es obligatorio.',
+                // 'name.string' => 'El nombre debe ser una cadena.',
+                // 'name.max' => 'El nombre debe tener un máximo de 255 caracteres.',
                 'email.required' => 'El correo electrónico es obligatorio.',
                 'email.email' => 'El correo electrónico no es válido.',
                 'email.max' => 'El correo electrónico debe tener un máximo de 255 caracteres.',
                 'password.required' => 'La contraseña es obligatoria.',
                 'password.string' => 'La contraseña debe ser una cadena.',
                 'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-                'role.required' => 'El rol es obligatorio.',
-                'role.string' => 'El rol debe ser un texto.',
+                // 'role.required' => 'El rol es obligatorio.',
+                // 'role.string' => 'El rol debe ser un texto.',
             ];
             $validator = Validator::make($request->all(),[
-                'name' =>'required|string|max:255',
+                //'name' =>'required|string|max:255',
                 'email' =>'required|email|max:255',
                 'password' => 'required|string|min:8|confirmed',
-                'role' =>'required|integer',
+                //'role' =>'required|integer',
                
             ],$message);
             if ($validator->fails()) {
                 return ApiResponse::error('Error de validación '.$validator->messages()->first(), 422);
             }
 
-
+            $dataExplode = explode('@',$request->email);
+            $userName = $dataExplode[0].'_'. Str::uuid();
     
             // crea usuario
             $user = User::create([
-                'name' => $request->name,
+                'name' => $userName,
                 'email' => $request->email,
                 'password' =>  bcrypt($request->password),
             ]);
 
             // Asigna rol a usuario creado
-            $user->assignRole($request->role);
+            $user->assignRole('User');
             DB::commit();
             return ApiResponse::success('Usuario creado',200,$user);
         } catch (\Exception $e) {

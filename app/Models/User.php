@@ -60,4 +60,7 @@ class User extends Authenticatable implements JWTSubject
             'permissions' => $this->getAllPermissions()->pluck('name')
         ];
     }
+    public function personaInformation(){
+        return $this->hasOne(MntPersonalInformationUserModel::class, 'user_id', 'id');
+    }
 }
