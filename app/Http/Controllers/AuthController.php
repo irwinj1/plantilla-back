@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Response\ApiResponse;
 use App\Models\MntPersonalInformationUserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,22 +38,22 @@ use Tymon\JWTAuth\Facades\JWTAuth;
         }
 
         public function refresh(Request $request)
-        {
-            
-            try {
-               //return $request->all();
-               $currentToken = JWTAuth::getToken();
+{
+    try {
+        $currentToken = JWTAuth::getToken();
 
         // Verifica si el token existe
         if (!$currentToken) {
             return response()->json(['error' => 'Token not provided'], 400);
         }
 
-        // Si el token está presente, intenta obtener el usuario asociado
-        $user = JWTAuth::toUser($currentToken); // Usa JWTAuth::toUser para obtener el usuario desde el token
-
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 400);
+        // Intenta obtener el usuario asociado con el token
+        try {
+            $user = JWTAuth::toUser($currentToken);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            // Si el token ha expirado, puedes intentar refrescarlo
+            $currentToken = JWTAuth::refresh($currentToken);
+            $user = JWTAuth::toUser($currentToken);
         }
 
         // Si no se encuentra el usuario, usa el user_id de la solicitud
@@ -72,25 +73,50 @@ use Tymon\JWTAuth\Facades\JWTAuth;
         // Refresca el token con los nuevos claims
         $newToken = JWTAuth::claims($customClaims)->refresh($currentToken);
 
-        // Invalida el token anterior (esto lo hace automáticamente JWTAuth::refresh)
-        // JWTAuth::invalidate($currentToken);  // Opcional si quieres invalidar manualmente
-
         return response()->json([
             'token' => $newToken,
             'message' => 'Token updated successfully',
         ], 200);
-            } catch (\Exception $e) {
-                //throw $th;
-                return $e->getMessage();
-            }
-        }
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
 
         // Logout and invalidate the JWT token
         public function logout()
-        {
-            //return 'aqui';
-            JWTAuth::invalidate(JWTAuth::getToken());
-
-            return response()->json(['message' => 'User logged out successfully','status' => 200]);
+{
+    try {
+        // Verifica si el token está presente
+        $token = JWTAuth::getToken();
+        
+        if (!$token) {
+            return response()->json([
+                'message' => 'No token provided',
+                'status' => 400
+            ], 400);
         }
+
+        // Invalidar el token
+        JWTAuth::invalidate($token);
+
+        return response()->json([
+            'message' => 'User logged out successfully',
+            'status' => 200
+        ], 200);
+        
+    } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+        // Error relacionado con el token JWT
+        return response()->json([
+            'message' => 'Error invalidating token: ' . $e->getMessage(),
+            'status' => 500
+        ], 500);
+    } catch (\Exception $e) {
+        // Error general
+        return response()->json([
+            'message' => 'Error al desloguear el usuario: ' . $e->getMessage(),
+            'status' => 500
+        ], 500);
+    }
+}
     }

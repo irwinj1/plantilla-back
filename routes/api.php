@@ -22,6 +22,8 @@ Route::middleware('auth:api')->prefix('users')->group(function (){
     Route::post('/permissions',[CreatePermissionRolController::class,'createPermissionsAction'])->middleware('rol:Super Admin,Admin');
     Route::post('/role',[CreatePermissionRolController::class,'store'])->middleware('rol:Super Admin');
     Route::post('/user-information',[PersonalInformationUserController::class,'store'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/profile', [PersonalInformationUserController::class,'getinfoUser'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/save-photo-perfil', [PersonalInformationUserController::class,'SaveImage'])->middleware('rol:Super Admin,Admin,User');
 });
 
 

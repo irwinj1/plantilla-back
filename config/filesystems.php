@@ -36,7 +36,12 @@ return [
             'serve' => true,
             'throw' => false,
         ],
-
+        'avatars' => [
+            'driver' => 'local',
+            'root' => storage_path('app/avatars'),
+            'serve' => true,
+            'throw' => false,
+        ],
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
