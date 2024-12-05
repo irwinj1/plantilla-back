@@ -122,8 +122,14 @@ public function register(Request $request){
         // Añade el rol al usuario
         $user->assignRole('User');
         DB::commit();
+       $data= $this->login(new Request([
+            'email' => $request->email,
+            'password' => $request->password,
+        ]));
+
+        // Personaliza los claims
         
-        return ApiResponse::success('Usuario creado',200,$user);
+        return ApiResponse::success('Usuario creado',200,$data);
         // Obtiene la información del usuario
     } catch (\Exception $th) {
         //throw $th;
