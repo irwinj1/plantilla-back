@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Response\ApiResponse;
 use App\Models\MntPersonalInformationUserModel;
+use App\Models\User;
+use DB;
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
     class AuthController extends Controller
@@ -80,6 +85,49 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+public function register(Request $request){
+    try {
+
+      DB::beginTransaction();
+        // Valida los datos
+        $validator = Validator::make($request->all(), [
+          
+            'email' =>'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'repeat_password' => 'required|string|min:8|same:password'
+        ],[
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El correo no tiene un formato válido.',
+            'email.unique' => 'El correo ya está en uso.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'repeat_password.same' => 'Las contraseñas no coinciden.',
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponse::error( $validator->errors()->first(), 400);
+        }
+        $emailExplode = explode('@',$request->email);
+        $name = $emailExplode[0].Str::random();
+        // Crea el usuario
+        $user = User::create([
+            'name' => $name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // Añade el rol al usuario
+        $user->assignRole('User');
+        DB::commit();
+        
+        return ApiResponse::success('Usuario creado',200,$user);
+        // Obtiene la información del usuario
+    } catch (\Exception $th) {
+        //throw $th;
+        return ApiResponse::error('Error al crear el usuario '.$th->getMessage(), 404);
     }
 }
 
