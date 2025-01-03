@@ -41,7 +41,7 @@ class PersonalInformationUserController extends Controller
         try {
             // Obtén el ID del usuario autenticado
             $user_id = auth()->user()->id;
-    
+  
             // Recupera la información personal del usuario
             $personalInformation = MntPersonalInformationUserModel::with(['user' => function($query) {
                 $query->select(['id', 'name', 'email']);
@@ -49,7 +49,7 @@ class PersonalInformationUserController extends Controller
             ->select([
                 'first_name', 'second_name', 'third_name', 
                 'first_last_name', 'second_last_name', 
-                'married_name', 'image_url', 'phone_number', 'user_id'
+                'married_name', 'image_url', 'phone_number', 'user_id','id'
             ])
             ->first();
     

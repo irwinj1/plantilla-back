@@ -24,8 +24,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
             }
 
             $user = Auth::user();
-            $userInformation = MntPersonalInformationUserModel::where('user_id', $user->id)->first();
             
+            $userInformation = MntPersonalInformationUserModel::where('user_id', $user->id)->first();
+           
             $customClaims = [
                 'user_id' => $user->id,
                 'email'=>$user->email,
