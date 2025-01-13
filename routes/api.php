@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function (){
     Route::post('login', [AuthController::class,'login']);
-    Route::post('logout', [AuthController::class,'logout']);
+    
     Route::post('refresh-token', [AuthController::class,'refresh']);
     Route::post('register',[AuthController::class,'register']);
 });
@@ -32,5 +32,11 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/admin-dashboard', function () {
         return response()->json(['message' => 'Welcome to the admin dashboard']);
     })->middleware('rol:Admin,Super Admin');
+});
+
+
+Route::middleware('auth:api')->prefix('users')->group(function () {
+    Route::put('display-name',[PersonalInformationUserController::class,'updateDisplayName'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('logout', [AuthController::class,'logout']);
 });
 

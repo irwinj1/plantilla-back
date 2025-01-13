@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePersonalInformationRequest;
+use App\Http\Requests\UpdatePersonalInformationResquest;
 use App\Http\Response\ApiResponse;
 use App\Models\MntPersonalInformationUserModel;
 use DB;
@@ -143,6 +144,16 @@ class PersonalInformationUserController extends Controller
         } catch (\Exception $e) {
             //throw $th;
             return ApiResponse::error($e->getMessage());
+        }
+    }
+    public function updateDisplayName(UpdatePersonalInformationResquest $request){
+        try {
+            //code...
+           
+            return ApiResponse::success('Informacion personal actualizada',200);
+
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 }
