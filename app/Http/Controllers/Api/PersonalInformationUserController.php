@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePersonalInformationRequest;
+use App\Http\Requests\UpdatePersonalInformationResquest;
 use App\Http\Response\ApiResponse;
 use App\Models\MntPersonalInformationUserModel;
 use DB;
@@ -41,7 +42,7 @@ class PersonalInformationUserController extends Controller
         try {
             // Obtén el ID del usuario autenticado
             $user_id = auth()->user()->id;
-    
+  
             // Recupera la información personal del usuario
             $personalInformation = MntPersonalInformationUserModel::with(['user' => function($query) {
                 $query->select(['id', 'name', 'email']);
@@ -49,7 +50,7 @@ class PersonalInformationUserController extends Controller
             ->select([
                 'first_name', 'second_name', 'third_name', 
                 'first_last_name', 'second_last_name', 
-                'married_name', 'image_url', 'phone_number', 'user_id'
+                'married_name', 'image_url', 'phone_number', 'user_id','id'
             ])
             ->first();
     
@@ -143,6 +144,16 @@ class PersonalInformationUserController extends Controller
         } catch (\Exception $e) {
             //throw $th;
             return ApiResponse::error($e->getMessage());
+        }
+    }
+    public function updateDisplayName(UpdatePersonalInformationResquest $request){
+        try {
+            //code...
+           
+            return ApiResponse::success('Informacion personal actualizada',200);
+
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 }
